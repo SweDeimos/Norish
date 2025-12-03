@@ -302,7 +302,7 @@ The root config files (`eslint.config.mjs`, `vitest.config.ts`) re-export from t
 
 ### Database
 
-- **PostgreSQL** 
+- **PostgreSQL**
 - **Drizzle ORM**
 
 ### AI & Processing
