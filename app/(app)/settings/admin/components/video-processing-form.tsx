@@ -94,7 +94,7 @@ export default function VideoProcessingForm() {
         <div className="flex flex-col gap-1">
           <span className="font-medium">Enable Video Parsing</span>
           <span className="text-default-500 text-sm">
-            Extract recipes from TikTok, Instagram, YouTube Shorts
+            Extract recipes from TikTok, Instagram, YouTube Shorts or Facebook
           </span>
         </div>
         <Switch color="success" isSelected={enabled} onValueChange={setEnabled} />

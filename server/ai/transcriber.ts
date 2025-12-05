@@ -47,14 +47,42 @@ export async function transcribeAudio(audioPath: string): Promise<string> {
       file: audioFile,
       model: videoConfig.transcriptionModel || "whisper-1",
       language: "en", // Force English transcription (Whisper will translate if needed)
-      response_format: "text",
+      response_format: "json",
     });
 
-    if (!response || typeof response !== "string") {
-      throw new Error("Invalid transcription response from OpenAI Whisper");
+    aiLogger.debug({ transcriptionResponse: response }, "Transcription response");
+    if (!response) {
+      throw new Error("Invalid transcription response from transcription service");
     }
 
-    const transcript = response.trim();
+    let transcript: string;
+    const responseData = response as unknown;
+    if (typeof responseData === "string") {
+      // Some local transcribers might return plain text
+      transcript = responseData.trim();
+    } else if (typeof responseData === "object" && responseData !== null) {
+      // Standard verbose_json format with text and/or segments
+      const jsonResponse = responseData as {
+        text?: string;
+        segments?: Array<{ text?: string }>;
+      };
+
+      if (jsonResponse.text) {
+        // Use the full text field if available (standard verbose_json)
+        transcript = jsonResponse.text.trim();
+      } else if (jsonResponse.segments && Array.isArray(jsonResponse.segments)) {
+        // Fallback: concatenate text from segments
+        transcript = jsonResponse.segments
+          .map((s) => s.text?.trim())
+          .filter(Boolean)
+          .join(" ")
+          .trim();
+      } else {
+        throw new Error("Transcription response missing text content");
+      }
+    } else {
+      throw new Error("Invalid transcription response format");
+    }
 
     if (!transcript || transcript.length === 0) {
       throw new Error("Transcription returned empty text");

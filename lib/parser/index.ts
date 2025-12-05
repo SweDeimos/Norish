@@ -1,7 +1,7 @@
 import { FullRecipeInsertDTO } from "@/types/dto/recipe";
 import { tryExtractRecipeFromJsonLd } from "@/lib/parser/jsonld";
 import { tryExtractRecipeFromMicrodata } from "@/lib/parser/microdata";
-import { fetchViaHttp, fetchViaPuppeteer } from "@/lib/parser/fetch";
+import { fetchViaPuppeteer } from "@/lib/parser/fetch";
 import { extractRecipeWithAI } from "@/server/ai/recipe-parser";
 import {
   getContentIndicators,

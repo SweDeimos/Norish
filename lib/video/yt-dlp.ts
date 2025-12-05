@@ -8,6 +8,7 @@ import { execSync } from "node:child_process";
 import YTDlpWrap from "yt-dlp-wrap";
 
 import { SERVER_CONFIG } from "@/config/env-config-server";
+import { getVideoConfig } from "@/config/server-config-loader";
 import { videoLogger as log } from "@/server/logger";
 
 // Resolve ffmpeg path at runtime
@@ -234,7 +235,8 @@ export async function downloadVideoAudio(url: string): Promise<string> {
 
 export async function validateVideoLength(url: string): Promise<void> {
   const metadata = await getVideoMetadata(url);
-  const maxLength = SERVER_CONFIG.VIDEO_MAX_LENGTH_SECONDS;
+  const videoConfig = await getVideoConfig();
+  const maxLength = videoConfig?.maxLengthSeconds ?? SERVER_CONFIG.VIDEO_MAX_LENGTH_SECONDS;
 
   if (metadata.duration > maxLength) {
     const actualMinutes = Math.floor(metadata.duration / 60);

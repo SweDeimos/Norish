@@ -83,7 +83,7 @@ const ServerConfigSchema = z.object({
   AI_ENDPOINT: z.string().optional(),
   AI_MODEL: z.string().default("gpt-5-mini"),
   AI_API_KEY: z.string().optional(),
-  AI_TEMPERATURE: z.coerce.number().min(0).max(2).default(0.0),
+  AI_TEMPERATURE: z.coerce.number().min(0).max(2).default(1.0),
   AI_MAX_TOKENS: z.coerce.number().default(10000),
 
   // Video Processing Configuration
@@ -107,7 +107,9 @@ const ServerConfigSchema = z.object({
   CONTENT_INDICATORS: z.string().optional(),
   CONTENT_INGREDIENTS: z.string().optional(),
 
-  CHROME_WS_ENDPOINT: z.string().min(1, "CHROME_WS_ENDPOINT is required for web scraping"),
+  CHROME_WS_ENDPOINT: z.string()
+    .min(1, "CHROME_WS_ENDPOINT is required for web scraping")
+    .default("ws://chrome-headless:3000"),
 
   // Scheduler Configuration
   SCHEDULER_CLEANUP_MONTHS: z.coerce.number().default(3),
