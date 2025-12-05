@@ -212,7 +212,7 @@ export async function downloadVideoAudio(url: string): Promise<string> {
 
     // Cleanup on failure
     try {
-      await fs.unlink(outputFile).catch(() => {});
+      await fs.unlink(outputFile).catch(() => { });
     } catch (cleanupErr) {
       log.error({ err: cleanupErr }, "Failed to cleanup temp file");
     }
@@ -235,7 +235,7 @@ export async function downloadVideoAudio(url: string): Promise<string> {
 
 export async function validateVideoLength(url: string): Promise<void> {
   const metadata = await getVideoMetadata(url);
-  const videoConfig = await getVideoConfig();
+  const videoConfig = await getVideoConfig(true);
   const maxLength = videoConfig?.maxLengthSeconds ?? SERVER_CONFIG.VIDEO_MAX_LENGTH_SECONDS;
 
   if (metadata.duration > maxLength) {

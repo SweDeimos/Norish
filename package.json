@@ -18,6 +18,7 @@
     "docker:build": "docker build -f docker/Dockerfile -t norishapp/norish:latest .",
     "docker:up": "docker-compose -f docker/docker-compose.yml up",
     "docker:down": "docker-compose -f docker/docker-compose.yml down",
+    "docker:local": "docker-compose -f docker/docker-compose.local.yml -p norish-local up --build",
     "start": "node dist-server/server.cjs",
     "test": "vitest",
     "test:run": "vitest run",

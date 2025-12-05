@@ -1,0 +1,53 @@
+services:
+  norish:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: norish-local:latest
+    container_name: norish-local
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - norish_local_data:/app/uploads
+    env_file:
+      - ../.env.local
+    environment:
+      - AUTH_URL=http://localhost:3000
+      - DATABASE_URL=postgres://postgres:norish@db:5432/norish
+      - CHROME_WS_ENDPOINT=ws://chrome-headless:3000
+      - NODE_ENV=production
+      - MASTER_KEY=QmFzZTY0RW5jb2RlZE1hc3RlcktleU1pbjMyQ2hhcnM= # Default dummy key for local dev if not set
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17-alpine
+    container_name: norish-db-local
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: norish
+      POSTGRES_DB: norish
+    volumes:
+      - db_local_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+  chrome-headless:
+    image: zenika/alpine-chrome:latest
+    container_name: chrome-headless-local
+    restart: unless-stopped
+    command:
+      - "--no-sandbox"
+      - "--disable-gpu"
+      - "--disable-dev-shm-usage"
+      - "--remote-debugging-address=0.0.0.0"
+      - "--remote-debugging-port=3000"
+      - "--headless"
+    ports:
+      - "3004:3000"
+
+volumes:
+  db_local_data:
+  norish_local_data:
